@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nikah — Sumaiya Fatima &amp; Arshad Khan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #0b0908;
+      --bg-card: rgba(24, 19, 16, 0.88);
+      --gold: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-dark: #996515;
+      --cream: #f5efe6;
+      --muted: #b8aa96;
+      --border: rgba(212, 175, 55, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: radial-gradient(ellipse at top, #1d1611 0%, var(--bg-deep) 75%);
+      color: var(--cream);
+      font-family: "Montserrat", sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body.locked {
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* Ambient floating gold particles */
+    #particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .arabic {
+      font-family: "Amiri", serif;
+      font-size: clamp(1.55rem, 4.5vw, 2.2rem);
+      line-height: 2.1;
+      direction: rtl;
+      color: var(--gold-light);
+      text-shadow: 0 2px 14px rgba(212, 175, 55, 0.25);
+    }
+
+    .gold-text {
+      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* ENVELOPE / SEAL OVERLAY */
+    #seal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: radial-gradient(circle at center, #1e1610 0%, #090706 85%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: opacity 0.9s ease, visibility 0.9s ease, transform 0.9s ease;
+    }
+
+    #seal-overlay.opened {
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(1.06);
+      pointer-events: none;
+    }
+
+    .envelope-frame {
+      position: relative;
+      max-width: 440px;
+      width: 100%;
+      padding: 2.25rem 1.5rem 2rem;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: linear-gradient(160deg, rgba(34, 26, 20, 0.95), rgba(14, 11, 9, 0.98));
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), inset 0 0 30px rgba(212, 175, 55, 0.08);
+    }
+
+    .envelope-frame::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.16);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+
+    .tag-top {
+      font-family: "Cinzel", serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .bismillah-box em {
+      display: block;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    .divider {
+      width: 90px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1.15rem auto;
+    }
+
+    .overlay-hosts {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .overlay-sub {
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0.35rem 0;
+    }
+
+    .overlay-couple {
+      font-family: "Cinzel", serif;
+      font-size: clamp(1.35rem, 4.5vw, 1.75rem);
+      font-weight: 600;
+      margin: 0.35rem 0 1.4rem;
+    }
+
+    /* WAX SEAL BUTTON */
+    .wax-seal {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      border: 2px solid var(--gold-light);
+      background: radial-gradient(circle at 30% 30%, #e6c15a, #9c6b19 70%, #6b4409 100%);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulseSeal 2.4s infinite ease-in-out;
+      transition: transform 0.25s ease;
+    }
+
+    .wax-seal:hover {
+      transform: scale(1.07);
+    }
+
+    .wax-seal span {
+      font-family: "Cinzel", serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #1f1507;
+      letter-spacing: 0.06em;
+    }
+
+    @keyframes pulseSeal {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.45), 0 8px 24px rgba(0, 0, 0, 0.6); }
+      50% { box-shadow: 0 0 0 14px rgba(212, 175, 55, 0), 0 8px 24px rgba(0, 0, 0, 0.6); }
+    }
+
+    .tap-label {
+      font-size: 0.85rem;
+      color: var(--gold-light);
+      letter-spacing: 0.08em;
+    }
+
+    .tap-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* FLOATING AUDIO BUTTON */
+    #audio-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 40;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      background: rgba(20, 16, 13, 0.9);
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.15rem 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    section {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2.3rem 1.4rem;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .eyebrow {
+      font-family: "Cinzel", serif;
+      font-size: 0.76rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-family: "Cinzel", serif;
+      font-size: clamp(1.65rem, 5vw, 2.25rem);
+      font-weight: 600;
+      line-height: 1.25;
+      margin: 0.3rem 0;
+    }
+
+    h3 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.45rem, 4.5vw, 1.85rem);
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1.35;
+    }
+
+    .body-copy {
+      font-size: 0.92rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0.4rem auto;
+      line-height: 1.75;
+    }
+
+    .quran-translation {
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--cream);
+      max-width: 520px;
+      margin: 0.85rem auto;
+      line-height: 1.65;
+    }
+
+    .source {
+      font-family: "Cinzel", serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      color: var(--gold);
+      margin-top: 0.6rem;
+    }
+
+    .guardian-name {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    .amp {
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin: 0.3rem 0;
+    }
+
+    .degree {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--gold-light);
+    }
+
+    /* SCRATCH TO REVEAL DATE */
+    .scratch-wrap {
+      position: relative;
+      width: 280px;
+      height: 92px;
+      margin: 1rem auto 1.25rem;
+      border-radius: 16px;
+      border: 1px solid var(--gold);
+      overflow: hidden;
+      background: linear-gradient(135deg, #241b13, #120e0b);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .revealed-date {
+      font-family: "Cinzel", serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+    .revealed-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    #scratch-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    /* COUNTDOWN */
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.65rem;
+      max-width: 440px;
+      margin: 0.75rem auto 0;
+    }
+
+    .countdown > div {
+      background: rgba(12, 10, 8, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.8rem 0.35rem;
+    }
+
+    .countdown b {
+      display: block;
+      font-family: "Cinzel", serif;
+      font-size: 1.45rem;
+      color: var(--gold-light);
+    }
+
+    .countdown span {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    /* MAP BUTTON */
+    .map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.15rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #bf953f, #e6c667, #aa771c);
+      color: #181107;
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .map-btn:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="locked">
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <!-- SPLASH WITH WAX SEAL -->
+  <div id="seal-overlay">
+    <div class="envelope-frame">
+      <div class="tag-top">Nikah Ceremony</div>
+      <div class="bismillah-box">
+        <p class="arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+        <em>In the name of Allah, the Most Beneficent, the Most Merciful</em>
+      </div>
+      <div class="divider"></div>
+      <div class="overlay-hosts">Mrs. &amp; Mr. Syed Asad</div>
+      <div class="overlay-sub">invite you to the Nikah of</div>
+      <div class="overlay-couple gold-text">Sumaiya Fatima &amp; Arshad Khan</div>
+
+      <button class="wax-seal" id="open-seal" type="button" aria-label="Tap the seal to open">
+        <span>S &amp; A</span>
+      </button>
+      <div class="tap-label">Tap the seal to open ♪</div>
+      <div class="tap-hint">Tap anywhere to continue</div>
+    </div>
+  </div>
+
+  <!-- AUDIO TOGGLE -->
+  <button id="audio-toggle" type="button" aria-label="Toggle music" title="Toggle music">♪</button>
+
+  <main>
+    <section>
+      <p class="arabic">السلام عليكم ورحمة الله وبركاته</p>
+      <div class="eyebrow">Nikah Invitation</div>
+      <p class="body-copy">Join us in celebrating a blessed union, In Sha Allah</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">From the Qur’an</div>
+      <p class="arabic">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</p>
+      <p class="quran-translation">“And among His signs is that He created for you mates from among yourselves that you may find tranquility in them, and He placed between you affection and mercy.”</p>
+      <div class="source">Surah Ar‑Rum · 30:21</div>
+    </section>
+
+    <section>
+      <div class="eyebrow">Under the Guardianship of</div>
+      <div class="guardian-name">Mr. Syed Abdul Ghani Sahab</div>
+      <div class="amp">&amp;</div>
+      <div class="guardian-name">Mrs. &amp; Mr. Mohammed Mahmood Ali</div>
+      <p class="body-copy">(Former Minister for Home, Prisons &amp; Fire Services TS)</p>
+
+      <div class="divider"></div>
+
+      <h3>Mrs. &amp; Mr. Syed Asad</h3>
+      <p class="body-copy">
+        Cordially request the honour of your esteemed presence to grace and bless the auspicious occasion of the
+      </p>
+      <h2 class="gold-text" style="margin-top: 0.4rem;">Nikah</h2>
+    </section>
+
+    <section>
+      <div class="eyebrow">Of Their Beloved Daughter</div>
+      <h2 class="gold-text">Sumaiya Fatima</h2>
+      <div class="degree">(MBA)</div>
+
+      <div class="amp" style="margin: 0.9rem 0;">with</div>
+
+      <h2 class="gold-text">Arshad Khan</h2>
+      <div class="degree">(BE (CSE))</div>
+      <p class="body-copy" style="margin-top: 0.65rem;">
+        S/o. <strong style="color: var(--cream);">Mrs. &amp; Mr. Mohammed Sayeedullah Khan</strong><br />
+        (RR Durafasts Pvt. Ltd. (EPC Contractors), Micor Group, Hyderabad)
+      </p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Reveal the Date</div>
+      <div class="scratch-wrap">
+        <div>
+          <div class="revealed-date">28 November 2026</div>
+          <div class="revealed-sub">Saturday · In Sha Allah</div>
+        </div>
+        <canvas id="scratch-canvas" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="countdown" aria-live="off">
+        <div><b id="days">0</b><span>Days</span></div>
+        <div><b id="hours">0</b><span>Hours</span></div>
+        <div><b id="minutes">0</b><span>Min</span></div>
+        <div><b id="seconds">0</b><span>Sec</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="eyebrow">The Venue</div>
+      <h3>Fort Grand</h3>
+      <p class="body-copy">Hyderabad</p>
+      <a
+        class="map-btn"
+        href="https://maps.google.com/maps/place//data=!4m2!3m1!1s0x3bcb90b6a60426fd:0x87821633f220e845?entry=s&sa=X&ved=2ahUKEwjKtfbS5ZeYAxVvyDgGHddJHekQ4kB6BAgeEAA&hl=en"
+        target="_blank"
+        rel="noopener"
+        aria-label="Open Fort Grand in Google Maps"
+      >
+        Open Venue in Google Maps
+      </a>
+    </section>
+  </main>
+
+  <script>
+    // 1. Soft ambient chime synthesizer (works offline with zero external MP3 dependency)
+    let audioCtx = null;
+    let isPlaying = false;
+    let chimeTimer = null;
+
+    function playWarmChord() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+
+      const notes = [261.63, 329.63, 392.0, 493.88]; // Cmaj7 soft harp pad
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+
+        const now = audioCtx.currentTime + i * 0.25;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.035, now + 0.4);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 3.3);
+      });
+    }
+
+    function startAudio() {
+      if (isPlaying) return;
+      isPlaying = true;
+      document.getElementById("audio-toggle").textContent = "♫";
+      playWarmChord();
+      chimeTimer = setInterval(playWarmChord, 4200);
+    }
+
+    function stopAudio() {
+      isPlaying = false;
+      document.getElementById("audio-toggle").textContent = "♪";
+      clearInterval(chimeTimer);
+    }
+
+    document.getElementById("audio-toggle").addEventListener("click", () => {
+      if (isPlaying) stopAudio();
+      else startAudio();
+    });
+
+    // 2. Open Seal Interaction
+    const overlay = document.getElementById("seal-overlay");
+    function openInvitation() {
+      overlay.classList.add("opened");
+      document.body.classList.remove("locked");
+      startAudio();
+      revealSections();
+    }
+    overlay.addEventListener("click", openInvitation);
+
+    // 3. Scroll Reveal Animation
+    const sections = document.querySelectorAll("main section");
+    function revealSections() {
+      sections.forEach((sec, idx) => {
+        setTimeout(() => sec.classList.add("visible"), idx * 140);
+      });
+    }
+
+    // 4. Scratch-to-reveal Date Card
+    const scratchCanvas = document.getElementById("scratch-canvas");
+    const sCtx = scratchCanvas.getContext("2d");
+    scratchCanvas.width = 280;
+    scratchCanvas.height = 92;
+
+    const grad = sCtx.createLinearGradient(0, 0, 280, 92);
+    grad.addColorStop(0, "#bf953f");
+    grad.addColorStop(0.5, "#f3e5ab");
+    grad.addColorStop(1, "#aa771c");
+    sCtx.fillStyle = grad;
+    sCtx.fillRect(0, 0, 280, 92);
+
+    sCtx.fillStyle = "#1d1408";
+    sCtx.font = "600 13px Cinzel, serif";
+    sCtx.textAlign = "center";
+    sCtx.fillText("SCRATCH TO REVEAL DATE", 140, 50);
+
+    let scratching = false;
+    function scratch(e) {
+      if (!scratching) return;
+      const rect = scratchCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = ((clientX - rect.left) / rect.width) * 280;
+      const y = ((clientY - rect.top) / rect.height) * 92;
+      sCtx.globalCompositeOperation = "destination-out";
+      sCtx.beginPath();
+      sCtx.arc(x, y, 22, 0, Math.PI * 2);
+      sCtx.fill();
+    }
+
+    scratchCanvas.addEventListener("mousedown", () => (scratching = true));
+    scratchCanvas.addEventListener("mouseup", () => (scratching = false));
+    scratchCanvas.addEventListener("mousemove", scratch);
+    scratchCanvas.addEventListener("touchstart", (e) => { scratching = true; scratch(e); }, { passive: true });
+    scratchCanvas.addEventListener("touchend", () => (scratching = false));
+    scratchCanvas.addEventListener("touchmove", scratch, { passive: true });
+
+    // 5. Countdown to 28 November 2026 (IST)
+    const targetDate = new Date("2026-11-28T19:00:00+05:30").getTime();
+    function updateCountdown() {
+      const diff = Math.max(0, targetDate - Date.now());
+      document.getElementById("days").textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+      document.getElementById("hours").textContent = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      document.getElementById("minutes").textContent = Math.floor((diff / (1000 * 60)) % 60);
+      document.getElementById("seconds").textContent = Math.floor((diff / 1000) % 60);
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // 6. Floating Gold Dust Particles
+    const pCanvas = document.getElementById("particles");
+    const pCtx = pCanvas.getContext("2d");
+    function resizeParticles() {
+      pCanvas.width = window.innerWidth;
+      pCanvas.height = window.innerHeight;
+    }
+    resizeParticles();
+    window.addEventListener("resize", resizeParticles);
+
+    const dots = Array.from({ length: 36 }, () => ({
+      x: Math.random() * pCanvas.width,
+      y: Math.random() * pCanvas.height,
+      r: Math.random() * 2 + 0.6,
+      dy: -(Math.random() * 0.35 + 0.1),
+      a: Math.random() * 0.6 + 0.2
+    }));
+
+    function animateParticles() {
+      pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+      dots.forEach((d) => {
+        d.y += d.dy;
+        if (d.y < 0) d.y = pCanvas.height;
+        pCtx.beginPath();
+        pCtx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        pCtx.fillStyle = `rgba(212, 175, 55, ${d.a})`;
+        pCtx.fill();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  </script>
+</body>
+</html>
